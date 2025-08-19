@@ -3,8 +3,6 @@ import { Link } from '../utils/RoutingUtils';
 import { HomePageDocsUrl, Version } from '../constants';
 import { DarkThemeSwitch } from '@mlflow/mlflow/src/common/components/DarkThemeSwitch';
 import { Button, MenuIcon, useDesignSystemTheme } from '@databricks/design-system';
-import { MlflowLogo } from './MlflowLogo';
-import mainRed from '../static/brand/main/main_red.png';
 import Image from 'rc-image';
 
 export const MlflowHeader = ({
@@ -49,11 +47,7 @@ export const MlflowHeader = ({
           aria-pressed={sidebarOpen}
           icon={<MenuIcon />}
         />
-        <div style={{ marginLeft: '8px', marginRight: '8px' }}>
-          <Link to={ExperimentTrackingRoutes.rootRoute}>
-            <Image src={mainRed} style={{ display: 'block', width: '100%', height: `${theme.spacing.md * 2}px` }} />
-          </Link>
-        </div>
+        <div style={{ marginLeft: '8px', marginRight: '8px' }}></div>
         <span
           css={{
             fontSize: theme.typography.fontSizeSm,
@@ -63,11 +57,11 @@ export const MlflowHeader = ({
         </span>
       </div>
       <div css={{ flex: 1 }} />
-      <div css={{ display: 'flex', gap: theme.spacing.lg, alignItems: 'center' }}>
+      {/* <div css={{ display: 'flex', gap: theme.spacing.lg, alignItems: 'center' }}>
         <DarkThemeSwitch isDarkTheme={isDarkTheme} setIsDarkTheme={setIsDarkTheme} />
         <a href="https://github.com/neeraip/mlflow">GitHub</a>
         <a href={HomePageDocsUrl}>Docs</a>
-      </div>
+      </div> */}
     </header>
   );
 };
