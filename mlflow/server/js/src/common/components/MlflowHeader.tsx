@@ -20,16 +20,25 @@ export const MlflowHeader = ({
 }) => {
   const { theme } = useDesignSystemTheme();
 
-  const [copied, setCopied] = useState(false);
+  const [copiedTrackingUrl, setCopiedTrackingUrl] = useState(false);
+  const [copiedArtifactS3Uri, setCopiedArtifactS3Uri] = useState(false);
 
   const studioUrl = process.env['REACT_APP_STUDIO_URL'];
+  const artifactS3Uri = process.env['REACT_APP_ARTIFACT_S3_URI'];
 
   useEffect(() => {
-    if (studioUrl && copied) {
+    if (studioUrl && copiedTrackingUrl) {
       copyTextToClipboard(studioUrl);
-      setTimeout(() => setCopied(false), 1000);
+      setTimeout(() => setCopiedTrackingUrl(false), 1000);
     }
-  }, [copied, setCopied]);
+  }, [studioUrl, copiedTrackingUrl, setCopiedTrackingUrl]);
+
+  useEffect(() => {
+    if (artifactS3Uri && copiedArtifactS3Uri) {
+      copyTextToClipboard(artifactS3Uri);
+      setTimeout(() => setCopiedArtifactS3Uri(false), 1000);
+    }
+  }, [artifactS3Uri, copiedArtifactS3Uri, setCopiedArtifactS3Uri]);
 
   return (
     <header
@@ -71,29 +80,44 @@ export const MlflowHeader = ({
         </span>
       </div>
       <div css={{ flex: 1 }} />
-      <div css={{ display: 'flex', gap: theme.spacing.lg, alignItems: 'center' }}>
-        <DarkThemeSwitch isDarkTheme={isDarkTheme} setIsDarkTheme={setIsDarkTheme} />
-        {process.env['REACT_APP_STUDIO_URL'] && (
-          <div css={{ display: 'flex', flexDirection: 'row', gap: theme.spacing.xs, alignItems: 'center' }}>
+      <div css={{ display: 'flex', gap: theme.spacing.md, alignItems: 'center' }}>
+        <div css={{ display: 'flex', flexDirection: 'row', gap: theme.spacing.xs, alignItems: 'center' }}>
+          {studioUrl && (
             <Button
               componentId="neer.studio.url"
               size="small"
               icon={
-                copied ? (
+                copiedTrackingUrl ? (
                   <CheckCircleIcon width="14px" height="14px" css={{ marginLeft: '4px' }} />
                 ) : (
                   <CopyIcon width="14px" height="14px" css={{ marginLeft: '4px' }} />
                 )
               }
               css={{ flexDirection: 'row-reverse' }}
-              onClick={() => setCopied(true)}
+              onClick={() => setCopiedTrackingUrl(true)}
             >
               Copy Tracking URL
             </Button>
-          </div>
-        )}
-        {/* <a href="https://github.com/neeraip/mlflow">GitHub</a>
-        <a href={HomePageDocsUrl}>Docs</a> */}
+          )}
+          {artifactS3Uri && (
+            <Button
+              componentId="neer.studio.url"
+              size="small"
+              icon={
+                copiedArtifactS3Uri ? (
+                  <CheckCircleIcon width="14px" height="14px" css={{ marginLeft: '4px' }} />
+                ) : (
+                  <CopyIcon width="14px" height="14px" css={{ marginLeft: '4px' }} />
+                )
+              }
+              css={{ flexDirection: 'row-reverse' }}
+              onClick={() => setCopiedArtifactS3Uri(true)}
+            >
+              Copy Artifact S3 URI
+            </Button>
+          )}
+        </div>
+        <DarkThemeSwitch isDarkTheme={isDarkTheme} setIsDarkTheme={setIsDarkTheme} />
       </div>
     </header>
   );
