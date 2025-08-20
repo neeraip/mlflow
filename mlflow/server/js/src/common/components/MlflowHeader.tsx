@@ -1,9 +1,11 @@
-import ExperimentTrackingRoutes from '../../experiment-tracking/routes';
-import { Link } from '../utils/RoutingUtils';
-import { HomePageDocsUrl, Version } from '../constants';
+import { Version } from '../constants';
 import { DarkThemeSwitch } from '@mlflow/mlflow/src/common/components/DarkThemeSwitch';
 import { Button, MenuIcon, useDesignSystemTheme } from '@databricks/design-system';
-import Image from 'rc-image';
+
+import { ReactComponent as CheckCircleIcon } from '../../common/static/check_circle.svg';
+import { ReactComponent as CopyIcon } from '../../common/static/copy.svg';
+import { copyTextToClipboard } from '../../common/utils/copyTextToClipboard';
+import { useEffect, useState } from 'react';
 
 export const MlflowHeader = ({
   isDarkTheme = false,
@@ -17,6 +19,18 @@ export const MlflowHeader = ({
   toggleSidebar: () => void;
 }) => {
   const { theme } = useDesignSystemTheme();
+
+  const [copied, setCopied] = useState(false);
+
+  const studioUrl = process.env['REACT_APP_STUDIO_URL'];
+
+  useEffect(() => {
+    if (studioUrl && copied) {
+      copyTextToClipboard(studioUrl);
+      setTimeout(() => setCopied(false), 1000);
+    }
+  }, [copied, setCopied]);
+
   return (
     <header
       css={{
@@ -57,11 +71,30 @@ export const MlflowHeader = ({
         </span>
       </div>
       <div css={{ flex: 1 }} />
-      {/* <div css={{ display: 'flex', gap: theme.spacing.lg, alignItems: 'center' }}>
+      <div css={{ display: 'flex', gap: theme.spacing.lg, alignItems: 'center' }}>
         <DarkThemeSwitch isDarkTheme={isDarkTheme} setIsDarkTheme={setIsDarkTheme} />
-        <a href="https://github.com/neeraip/mlflow">GitHub</a>
-        <a href={HomePageDocsUrl}>Docs</a>
-      </div> */}
+        {process.env['REACT_APP_STUDIO_URL'] && (
+          <div css={{ display: 'flex', flexDirection: 'row', gap: theme.spacing.xs, alignItems: 'center' }}>
+            <Button
+              componentId="neer.studio.url"
+              size="small"
+              icon={
+                copied ? (
+                  <CheckCircleIcon width="14px" height="14px" css={{ marginLeft: '4px' }} />
+                ) : (
+                  <CopyIcon width="14px" height="14px" css={{ marginLeft: '4px' }} />
+                )
+              }
+              css={{ flexDirection: 'row-reverse' }}
+              onClick={() => setCopied(true)}
+            >
+              Copy Tracking URL
+            </Button>
+          </div>
+        )}
+        {/* <a href="https://github.com/neeraip/mlflow">GitHub</a>
+        <a href={HomePageDocsUrl}>Docs</a> */}
+      </div>
     </header>
   );
 };
