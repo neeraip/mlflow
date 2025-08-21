@@ -1,4 +1,4 @@
-import { Version } from '../constants';
+import { HomePageDocsUrl, Version } from '../constants';
 import { DarkThemeSwitch } from '@mlflow/mlflow/src/common/components/DarkThemeSwitch';
 import { Button, MenuIcon, useDesignSystemTheme } from '@databricks/design-system';
 
@@ -21,10 +21,10 @@ export const MlflowHeader = ({
   const { theme } = useDesignSystemTheme();
 
   const [copiedTrackingUrl, setCopiedTrackingUrl] = useState(false);
-  const [copiedArtifactS3Uri, setCopiedArtifactS3Uri] = useState(false);
+  const [copiedToken, setCopiedToken] = useState(false);
 
   const studioUrl = process.env['REACT_APP_STUDIO_URL'];
-  const artifactS3Uri = process.env['REACT_APP_ARTIFACT_S3_URI'];
+  const token = process.env['REACT_APP_AUTHENTICATION_TOKEN'];
 
   useEffect(() => {
     if (studioUrl && copiedTrackingUrl) {
@@ -34,11 +34,11 @@ export const MlflowHeader = ({
   }, [studioUrl, copiedTrackingUrl, setCopiedTrackingUrl]);
 
   useEffect(() => {
-    if (artifactS3Uri && copiedArtifactS3Uri) {
-      copyTextToClipboard(artifactS3Uri);
-      setTimeout(() => setCopiedArtifactS3Uri(false), 1000);
+    if (token && copiedToken) {
+      copyTextToClipboard(token);
+      setTimeout(() => setCopiedToken(false), 1000);
     }
-  }, [artifactS3Uri, copiedArtifactS3Uri, setCopiedArtifactS3Uri]);
+  }, [token, copiedToken, setCopiedToken]);
 
   return (
     <header
@@ -96,27 +96,30 @@ export const MlflowHeader = ({
               css={{ flexDirection: 'row-reverse' }}
               onClick={() => setCopiedTrackingUrl(true)}
             >
-              Copy Tracking URL
+              Tracking URL
             </Button>
           )}
-          {artifactS3Uri && (
+          {token && (
             <Button
               componentId="neer.studio.url"
               size="small"
               icon={
-                copiedArtifactS3Uri ? (
+                copiedToken ? (
                   <CheckCircleIcon width="14px" height="14px" css={{ marginLeft: '4px' }} />
                 ) : (
                   <CopyIcon width="14px" height="14px" css={{ marginLeft: '4px' }} />
                 )
               }
               css={{ flexDirection: 'row-reverse' }}
-              onClick={() => setCopiedArtifactS3Uri(true)}
+              onClick={() => setCopiedToken(true)}
             >
-              Copy Artifact S3 URI
+              Authentication Token
             </Button>
           )}
         </div>
+        <a rel="noreferrer" target="_blank" href={HomePageDocsUrl}>
+          Docs
+        </a>
         <DarkThemeSwitch isDarkTheme={isDarkTheme} setIsDarkTheme={setIsDarkTheme} />
       </div>
     </header>
